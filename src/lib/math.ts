@@ -62,5 +62,15 @@ export function generateAlloyCombinations(metals: Metal[], ores: Ore[], params: 
 			approximationCombinations.push({ totalWeight, details });
 	}
 
-	return validCombinations.length == 0 ? { approximation: true, combinations: approximationCombinations.slice(0, count) } : { approximation: false, combinations: validCombinations };
+	return validCombinations.length > 0
+		? {
+			approximation: false,
+			combinations: validCombinations
+				.sort((a, b) => a.totalWeight - b.totalWeight)
+		}
+		: {
+			approximation: true,
+			combinations: approximationCombinations
+				.sort((a, b) => a.totalWeight - b.totalWeight)
+		};
 }
