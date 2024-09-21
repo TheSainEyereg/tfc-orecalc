@@ -4,8 +4,6 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" type="image/svg+xml" href="https://flowbite-svelte.com/images/favicon.svg">
-	<link rel="icon" type="image/png" href="https://flowbite-svelte.com/images/favicon.png">
 	<title>Ore calculator</title>
 </svelte:head>
 
