@@ -96,7 +96,7 @@
 						><CloseCircleSolid/></Button>
 					</div>
 					<div class="flex flex-row gap-2 items-center">
-						<Label class="text-sm text-nowrap">Quantity</Label>
+						<Label class="text-sm text-nowrap">Quantity (optional)</Label>
 						<NumberInput bind:value={ore.quantity} />
 						{#if ore.quantity}
 							<Button

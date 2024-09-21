@@ -15,12 +15,15 @@ function* product<T>(...args: T[][]): Iterable<T[]> {
 }
 
 export function generateAlloyCombinations(metals: Metal[], ores: Ore[], params: Params): Result {
-	const { multipleOf = 144, tolerance = 50, min = multipleOf, max = multipleOf * 10, count = 5 } = params;
+	const { multipleOf, tolerance, min, max, count } = params;
 
 	const validCombinations = [];
 	const approximationCombinations = [];
 
-	for (const quantities of product(...ores.map(ore => Array.from({ length: ore.quantity + 1 }, (_, i) => i)))) {
+	// Approximating max quantity
+	const maxQuantity = Math.floor(max / multipleOf);
+
+	for (const quantities of product(...ores.map(ore => Array.from({ length: (ore.quantity || maxQuantity) + 1 }, (_, i) => i)))) {
 		if (validCombinations.length >= count)
 			break;
 
@@ -28,7 +31,7 @@ export function generateAlloyCombinations(metals: Metal[], ores: Ore[], params: 
 		const totalQuantity = quantities.reduce((acc, val) => acc + val, 0);
 		const details: OreInfo[] = [];
 
-		if (totalQuantity === 0)
+		if (totalQuantity == 0)
 			continue;
 
 		ores.forEach((ore, i) => {
@@ -39,11 +42,8 @@ export function generateAlloyCombinations(metals: Metal[], ores: Ore[], params: 
 			}
 		});
 
-		if (totalWeight < min)
+		if (totalWeight < min || totalWeight > max)
 			continue;
-
-		if (totalWeight > max)
-			break;
 
 		let percentagesMet = true;
 		metals.forEach((metal) => {
