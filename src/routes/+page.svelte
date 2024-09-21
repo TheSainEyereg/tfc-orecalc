@@ -3,7 +3,7 @@
 	import { settings } from "$lib/stores";
 	import { generateAlloyCombinations } from "$lib/math";
 
-	import { Button, Input, NumberInput, Select, Range, Label, Alert, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox } from "flowbite-svelte";
+	import { Button, Input, NumberInput, Select, Range, Label, Alert, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from "flowbite-svelte";
 	import { CloseCircleSolid } from "flowbite-svelte-icons";
 
 	let metals: Metal[] = $settings.metals;
@@ -26,7 +26,7 @@
 			<div class="flex w-full flex-col gap-2">
 				<Label>Multiple of</Label>
 				<div class="flex flex-row gap-2 items-center">
-					<Input type="number" bind:value={params.multipleOf} />
+					<NumberInput bind:value={params.multipleOf} />
 					<Label>mB</Label>
 				</div>
 			</div>
@@ -37,11 +37,11 @@
 			<div class="flex w-full flex-row gap-2">
 				<div class="flex w-full flex-col gap-2">
 					<Label>Min mB</Label>
-					<Input type="number" bind:value={params.min} />
+					<NumberInput bind:value={params.min} />
 				</div>
 				<div class="flex w-full flex-col gap-2">
 					<Label>Max mB</Label>
-					<Input type="number" bind:value={params.max} />
+					<NumberInput bind:value={params.max} />
 				</div>
 			</div>
 		</div>
@@ -96,8 +96,8 @@
 						><CloseCircleSolid/></Button>
 					</div>
 					<div class="flex flex-row gap-2 items-center">
-						<Label class="text-sm text-nowrap">Quantity (optional)</Label>
-						<NumberInput placeholder="Count (optional)" bind:value={ore.quantity} />
+						<Label class="text-sm text-nowrap">Quantity</Label>
+						<NumberInput bind:value={ore.quantity} />
 						{#if ore.quantity}
 							<Button
 								color="alternative"
@@ -115,7 +115,7 @@
 							placeholder="Select containing component"
 						></Select>
 						<div class="flex flex-row gap-2 items-center">
-							<NumberInput placeholder="quantity" bind:value={ore.weight} />
+							<NumberInput bind:value={ore.weight} />
 							<Label>mB</Label>
 						</div>
 					</div>
