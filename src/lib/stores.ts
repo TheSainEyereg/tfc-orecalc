@@ -1,8 +1,8 @@
 import { persisted } from "svelte-persisted-store"
-import type { Component, Ore } from "./interfaces"
+import type { Metal, Ore, Params } from "./interfaces"
 
-export const params = persisted('params', {
-	components: [
+export const settings = persisted<{ metals: Metal[]; ores: Ore[]; params: Params }>('params', {
+	metals: [
 		{
 			id: "",
 			percent: {
@@ -10,13 +10,20 @@ export const params = persisted('params', {
 				max: 50
 			}
 		}
-	] as Component[],
+	],
 	ores: [
 		{
 			name: "",
 			id: "",
-			millibuckets: 0
+			weight: 0,
+			quantity: 0
 		}
-	] as Ore[],
-	multipleOf: 144
+	],
+	params: {
+		multipleOf: 144,
+		tolerance: 30,
+		count: 5,
+		min: 144,
+		max: 1440
+	}
 })

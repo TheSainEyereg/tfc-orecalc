@@ -1,4 +1,4 @@
-export interface Component {
+export interface Metal {
 	id: string;
 	percent: {
 		min: number;
@@ -8,7 +8,33 @@ export interface Component {
 
 export interface Ore {
 	name: string;
-	// amount?: number;
+	quantity: number;
 	id: string;
-	millibuckets: number;
+	weight: number;
+}
+
+export interface Params {
+	multipleOf: number;
+	tolerance: number;
+	count: number;
+	min: number;
+	max: number;
+}
+
+export interface OreInfo {
+	id: string;
+	name: string;
+	weight: number;
+	quantity: number;
+	percent: number;
+}
+
+export interface Combination {
+	details: OreInfo[];
+	totalWeight: number;
+}
+
+export interface Result {
+	combinations: Combination[];
+	approximation: boolean;
 }
