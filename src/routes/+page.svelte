@@ -32,7 +32,7 @@
 			</div>
 			<div class="flex w-full flex-col gap-2">
 				<Label>Approximation tollerance: {params.tolerance} mB</Label>
-				<Range bind:value={params.tolerance} max={64} min={0} step={1}/>
+				<Range bind:value={params.tolerance} max={params.multipleOf - 1} min={0} step={1}/>
 			</div>
 			<div class="flex w-full flex-row gap-2">
 				<div class="flex w-full flex-col gap-2">
@@ -169,7 +169,7 @@
 				</div>
 			{:else}
 				<Alert>
-					<span class="font-medium">No combinations found</span>
+					<span class="font-medium">No combinations (including approximate) found</span>
 				</Alert>
 			{/if}
 		{/if}
