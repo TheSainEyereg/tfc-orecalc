@@ -1,7 +1,7 @@
 import { persisted } from "svelte-persisted-store"
 import type { Metal, Ore, Params } from "./interfaces"
 
-export const settings = persisted<{ metals: Metal[]; ores: Ore[]; params: Params }>('params', {
+export const settings = persisted<{ metals: Metal[]; ores: Ore[]; params: Params }>("settings", {
 	metals: [
 		{
 			id: "",
