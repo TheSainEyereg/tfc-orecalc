@@ -22,10 +22,9 @@ export function generateAlloyCombinations(metals: Metal[], ores: Ore[], params: 
 
 	const start = Date.now();
 	let timedout = false;
-	setTimeout(() => timedout = true, timeout * 1000);
 
 	for (const quantities of product(...ores.map(ore => Array.from({ length: (ore.quantity || 64) + 1 }, (_, i) => i)))) {
-		if (timedout || validCombinations.length >= count)
+		if ((timedout = Date.now() - start > timeout * 1000) || validCombinations.length >= count)
 			break;
 
 		let finalWeight = 0;
