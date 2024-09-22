@@ -1,4 +1,4 @@
-import type { Metal, Ore, OreInfo, Params, Result } from "./interfaces"
+import type { Combination, Metal, Ore, OreInfo, Params, Result } from "./interfaces"
 
 function* product<T>(...args: T[][]): Iterable<T[]> {
 	const pools = args.map(pool => Array.from(pool));
@@ -15,19 +15,21 @@ function* product<T>(...args: T[][]): Iterable<T[]> {
 }
 
 export function generateAlloyCombinations(metals: Metal[], ores: Ore[], params: Params): Result {
-	const { multipleOf, tolerance, min, max, count } = params;
+	const { multipleOf, tolerance, min, max, count, timeout } = params;
 
-	const validCombinations = [];
-	const approximationCombinations = [];
+	const validCombinations: Combination[] = [];
+	const approximationCombinations: Combination[] = [];
 
-	// Approximating max quantity
-	const maxQuantity = Math.floor(max / multipleOf);
+	const start = Date.now();
 
-	for (const quantities of product(...ores.map(ore => Array.from({ length: (ore.quantity || maxQuantity) + 1 }, (_, i) => i)))) {
+	for (const quantities of product(...ores.map(ore => Array.from({ length: (ore.quantity || 32) + 1 }, (_, i) => i)))) {
 		if (validCombinations.length >= count)
 			break;
 
-		let totalWeight = 0;
+		if (Date.now() - start > timeout * 1000)
+			break;
+
+		let finalWeight = 0;
 		const totalQuantity = quantities.reduce((acc, val) => acc + val, 0);
 		const details: OreInfo[] = [];
 
@@ -37,12 +39,12 @@ export function generateAlloyCombinations(metals: Metal[], ores: Ore[], params: 
 		ores.forEach((ore, i) => {
 			if (quantities[i] > 0) {
 				const weight = quantities[i] * ore.weight;
-				totalWeight += weight;
+				finalWeight += weight;
 				details.push({ id: ore.id, name: ore.name, weight, quantity: quantities[i], percent: (quantities[i] / totalQuantity) * 100 });
 			}
 		});
 
-		if (totalWeight < min || totalWeight > max)
+		if (finalWeight < min || finalWeight > max)
 			continue;
 
 		let percentagesMet = true;
@@ -56,21 +58,40 @@ export function generateAlloyCombinations(metals: Metal[], ores: Ore[], params: 
 				percentagesMet = false;
 		});
 
-		if (totalWeight % multipleOf === 0 && totalWeight > 0 && percentagesMet)
-			validCombinations.push({ totalWeight, details });
-		else if (Math.abs(totalWeight - multipleOf) <= tolerance && percentagesMet)
-			approximationCombinations.push({ totalWeight, details });
+		if (!percentagesMet)
+			continue;
+
+		const valid = finalWeight % multipleOf === 0 && finalWeight > 0;
+		const approximation = Math.abs(finalWeight - multipleOf) <= tolerance && finalWeight > 0;
+		
+		if (!valid && !approximation)
+			continue;
+
+		(valid ? validCombinations : approximationCombinations).push({
+			details,
+			finalWeight: {
+				total: finalWeight,
+				quantity: Math.floor(finalWeight / multipleOf),
+				additional: finalWeight - multipleOf * Math.floor(finalWeight / multipleOf),
+				multipleOf
+			}
+		});
 	}
 
-	return validCombinations.length > 0
+	return {
+		...validCombinations.length > 0
 		? {
 			approximation: false,
 			combinations: validCombinations
-				.sort((a, b) => a.totalWeight - b.totalWeight)
+				.sort((a, b) => a.finalWeight.total - b.finalWeight.total)
 		}
 		: {
 			approximation: true,
 			combinations: approximationCombinations
-				.sort((a, b) => a.totalWeight - b.totalWeight)
-		};
+				.sort((a, b) => a.finalWeight.total - b.finalWeight.total)
+				.slice(0, count)
+		},
+		time: (Date.now() - start) / 1000,
+		timeout: Date.now() - start > timeout * 1000
+	};
 }

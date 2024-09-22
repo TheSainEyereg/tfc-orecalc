@@ -16,9 +16,10 @@ export interface Ore {
 export interface Params {
 	multipleOf: number;
 	tolerance: number;
-	count: number;
 	min: number;
 	max: number;
+	count: number;
+	timeout: number;
 }
 
 export interface OreInfo {
@@ -31,10 +32,18 @@ export interface OreInfo {
 
 export interface Combination {
 	details: OreInfo[];
-	totalWeight: number;
+	finalWeight: {
+		total: number;
+		quantity: number;
+		additional: number;
+		multipleOf: number;
+	};
 }
 
 export interface Result {
 	combinations: Combination[];
 	approximation: boolean;
+	timeout: boolean;
+	time: number;
+
 }

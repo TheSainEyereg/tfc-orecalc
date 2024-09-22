@@ -4,7 +4,7 @@
 	import { generateAlloyCombinations } from "$lib/math";
 
 	import { Button, Input, NumberInput, Select, Range, Label, Alert, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from "flowbite-svelte";
-	import { CloseCircleSolid } from "flowbite-svelte-icons";
+	import { CloseCircleSolid, InfoCircleSolid } from "flowbite-svelte-icons";
 
 	let metals: Metal[] = $settings.metals;
 	let ores: Ore[] = $settings.ores;
@@ -129,8 +129,12 @@
 		
 		<div class="flex w-full flex-col gap-4">
 			<div class="flex w-full flex-col gap-2">
-				<Label>Limit: {params.count} combinations</Label>
+				<Label>Limit: {params.count} combination{params.count > 1 ? "s" : ""}</Label>
 				<Range bind:value={params.count} min={1} max={100} step={1}/>
+			</div>
+			<div class="flex w-full flex-col gap-2">
+				<Label>Timeout: {params.timeout} seconds</Label>
+				<Range bind:value={params.timeout} min={5} max={30} step={1}/>
 			</div>
 			<Button on:click={calculate}>Calculate</Button>
 		</div>
@@ -139,13 +143,21 @@
 			{#if result.combinations.length > 0}
 				{#if result.approximation}
 					<Alert color="yellow">
-						<span class="font-medium">No valid proportions found. Showing approximations</span>
+						<InfoCircleSolid slot="icon" class="w-5 h-5" />
+						<span class="font-medium">No valid combinations found. Showing approximations</span>
 					</Alert>
 				{/if}
+				{#if result.timeout}
+					<Alert>
+						<InfoCircleSolid slot="icon" class="w-5 h-5" />
+						<span class="font-medium">Calculation timed out</span>
+					</Alert>
+				{/if}
+				<span>Found {result.combinations.length} combination{result.combinations.length > 1 ? "s" : ""} (took {result.time.toFixed(2)} seconds)</span>
 				<div class="flex w-full flex-col gap-4">
 					{#each result.combinations as combination}
 						<div class="flex w-full flex-col gap-2">
-							<Label>Total weight: {combination.totalWeight} mB</Label>
+							<Label>Total weight: {combination.finalWeight.multipleOf} * {combination.finalWeight.quantity}{combination.finalWeight.additional ?` + ${combination.finalWeight.additional}` : ""} = {combination.finalWeight.total} mB</Label>
 							<Table>
 								<TableHead>
 									<TableHeadCell>Ore</TableHeadCell>
@@ -168,7 +180,8 @@
 					{/each}
 				</div>
 			{:else}
-				<Alert>
+				<Alert color="red">
+					<InfoCircleSolid slot="icon" class="w-5 h-5" />
 					<span class="font-medium">No combinations (including approximate) found</span>
 				</Alert>
 			{/if}

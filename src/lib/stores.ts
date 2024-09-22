@@ -23,6 +23,7 @@ export const settings = persisted<{ metals: Metal[]; ores: Ore[]; params: Params
 		multipleOf: 144,
 		tolerance: 30,
 		count: 5,
+		timeout: 10,
 		min: 144,
 		max: 1440
 	}
