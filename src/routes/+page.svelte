@@ -147,7 +147,7 @@
 						<span class="font-medium">No valid combinations found. Showing approximations</span>
 					</Alert>
 				{/if}
-				{#if result.timeout}
+				{#if result.timedout}
 					<Alert>
 						<InfoCircleSolid slot="icon" class="w-5 h-5" />
 						<span class="font-medium">Calculation timed out</span>

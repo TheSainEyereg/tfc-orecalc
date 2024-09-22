@@ -43,7 +43,7 @@ export interface Combination {
 export interface Result {
 	combinations: Combination[];
 	approximation: boolean;
-	timeout: boolean;
+	timedout: boolean;
 	time: number;
 
 }

@@ -1,17 +1,17 @@
 import type { Combination, Metal, Ore, OreInfo, Params, Result } from "./interfaces"
 
-function* product<T>(...args: T[][]): Iterable<T[]> {
-	const pools = args.map(pool => Array.from(pool));
+function* product<T>(...pools: T[][]): Iterable<T[]> {
 	let result: T[][] = [[]];
 	for (const pool of pools) {
 		const temp: T[][] = [];
-		for (const x of result)
-			for (const y of pool)
+		for (const x of result) {
+			for (const y of pool) {
+				yield [...x, y];
 				temp.push([...x, y]);
+			}
+		}
 		result = temp;
 	}
-	for (const prod of result)
-		yield prod;
 }
 
 export function generateAlloyCombinations(metals: Metal[], ores: Ore[], params: Params): Result {
@@ -21,12 +21,11 @@ export function generateAlloyCombinations(metals: Metal[], ores: Ore[], params: 
 	const approximationCombinations: Combination[] = [];
 
 	const start = Date.now();
+	let timedout = false;
+	setTimeout(() => timedout = true, timeout * 1000);
 
-	for (const quantities of product(...ores.map(ore => Array.from({ length: (ore.quantity || 32) + 1 }, (_, i) => i)))) {
-		if (validCombinations.length >= count)
-			break;
-
-		if (Date.now() - start > timeout * 1000)
+	for (const quantities of product(...ores.map(ore => Array.from({ length: (ore.quantity || 64) + 1 }, (_, i) => i)))) {
+		if (timedout || validCombinations.length >= count)
 			break;
 
 		let finalWeight = 0;
@@ -92,6 +91,6 @@ export function generateAlloyCombinations(metals: Metal[], ores: Ore[], params: 
 				.slice(0, count)
 		},
 		time: (Date.now() - start) / 1000,
-		timeout: Date.now() - start > timeout * 1000
+		timedout
 	};
 }
