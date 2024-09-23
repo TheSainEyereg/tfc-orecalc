@@ -140,17 +140,17 @@
 		</div>
 
 		{#if result !== null}
+			{#if result.timedout}
+				<Alert>
+					<InfoCircleSolid slot="icon" class="w-5 h-5" />
+					<span class="font-medium">Calculation timed out</span>
+				</Alert>
+			{/if}
 			{#if result.combinations.length > 0}
 				{#if result.approximation}
 					<Alert color="yellow">
 						<InfoCircleSolid slot="icon" class="w-5 h-5" />
 						<span class="font-medium">No valid combinations found. Showing approximations</span>
-					</Alert>
-				{/if}
-				{#if result.timedout}
-					<Alert>
-						<InfoCircleSolid slot="icon" class="w-5 h-5" />
-						<span class="font-medium">Calculation timed out</span>
 					</Alert>
 				{/if}
 				<span>Found {result.combinations.length} combination{result.combinations.length > 1 ? "s" : ""} (took {result.time.toFixed(2)} seconds)</span>
