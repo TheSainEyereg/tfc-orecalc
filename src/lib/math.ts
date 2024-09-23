@@ -1,17 +1,12 @@
 import type { Combination, Metal, Ore, OreInfo, Params, Result } from "./interfaces"
 
 function* product<T>(...pools: T[][]): Iterable<T[]> {
-	let result: T[][] = [[]];
-	for (const pool of pools) {
-		const temp: T[][] = [];
-		for (const x of result) {
-			for (const y of pool) {
-				yield [...x, y];
-				temp.push([...x, y]);
-			}
-		}
-		result = temp;
-	}
+    const head = pools[0];
+    const tail = pools.slice(1);
+    const remainder = tail.length > 0 ? product(...tail) : [[]];
+    for (let r of remainder)
+		for (let h of head)
+			yield [h, ...r];
 }
 
 export function generateAlloyCombinations(metals: Metal[], ores: Ore[], params: Params): Result {
