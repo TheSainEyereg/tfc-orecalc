@@ -38,7 +38,7 @@ export function generateAlloyCombinations(metals: Metal[], ores: Ore[], params: 
 			if (quantities[i] > 0) {
 				const weight = quantities[i] * ore.weight;
 				finalWeight += weight;
-				details.push({ id: ore.id, name: ore.name, weight, quantity: quantities[i], percent: (quantities[i] / totalQuantity) * 100 });
+				details.push({ id: ore.id, name: ore.name, weight, quantity: quantities[i] });
 			}
 		});
 
@@ -47,10 +47,10 @@ export function generateAlloyCombinations(metals: Metal[], ores: Ore[], params: 
 
 		let percentagesMet = true;
 		metals.forEach((metal) => {
-			const metalQuantity = details
+			const metalWeight = details
 				.filter(w => w.id === metal.id)
-				.reduce((acc, val) => acc + val.quantity, 0);
-			const percentage = (metalQuantity / totalQuantity) * 100;
+				.reduce((acc, val) => acc + val.weight, 0);
+			const percentage = (metalWeight / finalWeight) * 100;
 
 			if (!(metal.percent.min <= percentage && percentage <= metal.percent.max))
 				percentagesMet = false;

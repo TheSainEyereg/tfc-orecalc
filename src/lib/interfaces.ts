@@ -27,7 +27,6 @@ export interface OreInfo {
 	name: string;
 	weight: number;
 	quantity: number;
-	percent: number;
 }
 
 export interface Combination {

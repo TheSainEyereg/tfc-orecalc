@@ -171,7 +171,7 @@
 											<TableBodyCell>{ore.name}</TableBodyCell>
 											<TableBodyCell>{ore.quantity}</TableBodyCell>
 											<TableBodyCell>{ore.weight}</TableBodyCell>
-											<TableBodyCell>{ore.percent.toFixed(2)}%</TableBodyCell>
+											<TableBodyCell>{(ore.weight / combination.finalWeight.total * 100).toFixed(2)}%</TableBodyCell>
 										</TableBodyRow>
 									{/each}
 								</TableBody>
