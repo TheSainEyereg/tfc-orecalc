@@ -2,6 +2,8 @@
 
 Calculator for calculating optimal combination of ores in TerraFirmaCraft originally created to try out Tailwind and Flolwbite
 
+Link to the tool: https://v4kodin.github.io/tfg-m-orecalc/
+
 ## Building and running from source
 #### Building steps
 1. [Download and install NodeJS 20 or higher](https://nodejs.org/en/download)

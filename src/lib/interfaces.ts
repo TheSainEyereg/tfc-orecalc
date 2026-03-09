@@ -47,7 +47,7 @@ export interface Result {
 	approximation: boolean;
 	timedout: boolean;
 	time: number;
-
+	error?: string;
 }
 
 export interface Preset {
